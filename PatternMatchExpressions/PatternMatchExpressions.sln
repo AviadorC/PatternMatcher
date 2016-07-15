@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatternMatchExpressions", "PatternMatchExpressions\PatternMatchExpressions.csproj", "{5558AE97-6857-4F41-90BF-EAD9C9CD69FF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatternMatchExpressions.Test", "PatternMatchExpressions.Test\PatternMatchExpressions.Test.csproj", "{41088DE2-29D8-4EAB-95AD-A6B09E83BF63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatternMatcher", "PatternMatcher\PatternMatcher.csproj", "{41C240AB-1115-4AFC-9DB9-96098DF559BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5558AE97-6857-4F41-90BF-EAD9C9CD69FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5558AE97-6857-4F41-90BF-EAD9C9CD69FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5558AE97-6857-4F41-90BF-EAD9C9CD69FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5558AE97-6857-4F41-90BF-EAD9C9CD69FF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{41088DE2-29D8-4EAB-95AD-A6B09E83BF63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{41088DE2-29D8-4EAB-95AD-A6B09E83BF63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41088DE2-29D8-4EAB-95AD-A6B09E83BF63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41088DE2-29D8-4EAB-95AD-A6B09E83BF63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41C240AB-1115-4AFC-9DB9-96098DF559BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41C240AB-1115-4AFC-9DB9-96098DF559BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41C240AB-1115-4AFC-9DB9-96098DF559BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41C240AB-1115-4AFC-9DB9-96098DF559BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

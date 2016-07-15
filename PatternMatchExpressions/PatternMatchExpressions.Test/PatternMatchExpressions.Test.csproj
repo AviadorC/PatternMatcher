@@ -50,13 +50,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="PatternTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PatternMatchExpressions\PatternMatchExpressions.csproj">
-      <Project>{5558AE97-6857-4F41-90BF-EAD9C9CD69FF}</Project>
-      <Name>PatternMatchExpressions</Name>
+    <ProjectReference Include="..\PatternMatcher\PatternMatcher.csproj">
+      <Project>{41C240AB-1115-4AFC-9DB9-96098DF559BC}</Project>
+      <Name>PatternMatcher</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

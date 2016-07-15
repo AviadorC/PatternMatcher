@@ -1,11 +1,10 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PatternMatchExpressions;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PatternMatcher;
 
 namespace PatternMatchExpressions.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class PatternTest
     {
         [TestMethod]
         public void Int_ShouldPass_CS()
