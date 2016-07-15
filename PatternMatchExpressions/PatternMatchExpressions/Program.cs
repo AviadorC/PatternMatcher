@@ -52,6 +52,11 @@ namespace PatternMatchExpressions
 
         public static Case<T> Case<T>(this Case<T> patternCase, Predicate<T> casePredicate)
         {
+            if(patternCase.Status == CaseStatus.Break)
+            {
+                return patternCase;
+            }
+
             if(patternCase.Status == CaseStatus.Statement ||
                 (patternCase.Status == CaseStatus.Pattern && !(patternCase.Result == CaseResult.Match)))
             {
@@ -62,14 +67,44 @@ namespace PatternMatchExpressions
             return patternCase;
         }
 
-        public static Case<T> Statement<T>(this Case<T> patternCase, Action<T> statement)
+        public static Case<T> Do<T>(this Case<T> patternCase, Action<T> statement)
         {
-            if(patternCase.Result == CaseResult.Match)
+            if (patternCase.Status == CaseStatus.Break)
+            {
+                return patternCase;
+            }
+
+            if (patternCase.Result == CaseResult.Match)
             {
                 statement(patternCase.TestObject);
             }
 
             patternCase.Status = CaseStatus.Statement;
+            return patternCase;
+        }
+
+        public static Case<T> Do<T>(this Case<T> patternCase, Action statement)
+        {
+            if (patternCase.Status == CaseStatus.Break)
+            {
+                return patternCase;
+            }
+
+            if (patternCase.Result == CaseResult.Match)
+            {
+                statement();
+            }
+
+            patternCase.Status = CaseStatus.Statement;
+            return patternCase;
+        }
+
+        public static Case<T> Break<T>(this Case<T> patternCase)
+        {
+            if(patternCase.Result == CaseResult.Match && patternCase.Status == CaseStatus.Statement)
+            {
+                patternCase.Status = CaseStatus.Break;
+            }
             return patternCase;
         }
     }
@@ -87,7 +122,7 @@ namespace PatternMatchExpressions
 
             test
                 .Case((t) => t.A > 0 && t.B < 6)
-                .Statement((s) =>
+                .Do((s) =>
                 {
                     Console.WriteLine("Statement1");
                     s.A++;
@@ -102,9 +137,10 @@ namespace PatternMatchExpressions
                     {
                         result = true;
                     }
+                    
                     return result;
                 })
-                .Statement((s) =>
+                .Do((s) =>
                 {
                     Console.WriteLine("Statement2");
                     s.C = "QWER";
@@ -114,20 +150,3 @@ namespace PatternMatchExpressions
         }
     }
 }
-
-/*
- * 
- * T
- * T
- * F
- * 
- * F
- * F
- * T
- * 
- * T
- * F
- * T
- * 
- * 
- */

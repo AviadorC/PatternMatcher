@@ -16,7 +16,7 @@ namespace PatternMatchExpressions.Test
 
             value
                 .Case((v) => v > 0 && v < 5)
-                .Statement((v) => success = true);
+                .Do((v) => success = true);
 
             Assert.IsTrue(success);
         }
@@ -32,11 +32,11 @@ namespace PatternMatchExpressions.Test
 
             value
                 .Case((v) => v > 0 && v < 10)
-                .Statement((v) => r1 = true)
+                .Do((v) => r1 = true)
                 .Case((v) => v < 2 || v > 10)
-                .Statement((v) => r2 = false)
+                .Do((v) => r2 = false)
                 .Case((v) => v > 0)
-                .Statement((v) => r3 = true);
+                .Do((v) => r3 = true);
 
             Assert.IsTrue(r1);
             Assert.IsTrue(r2);
@@ -53,9 +53,45 @@ namespace PatternMatchExpressions.Test
             value
                 .Case((v) => v > 6)
                 .Case((v) => v > 3 && v < 7)
-                .Statement((v) => result = true);
+                .Do((v) => result = true);
 
             Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Int_ShouldPass_Break()
+        {
+            int value = 5;
+
+            value
+                .Case((v) => v > 3)
+                .Do(() => value++)
+                .Case((v) => v < 7)
+                .Case((v) => v < 10)
+                .Do(() => value++)
+                .Break()
+                .Case((v) => v > 1)
+                .Do(() => value++);
+
+            Assert.AreEqual(7, value);
+        }
+
+        [TestMethod]
+        public void Int_ShouldPass_NotCalledStatement_NoBreak()
+        {
+            int value = 5;
+
+            value
+                .Case((v) => v > 3)
+                .Do(() => value++)
+                .Case((v) => v < 1)
+                .Case((v) => v > 10)
+                .Do(() => value++)
+                .Break()
+                .Case((v) => v > 1)
+                .Do(() => value += 5);
+
+            Assert.AreEqual(11, value);
         }
     }
 }
