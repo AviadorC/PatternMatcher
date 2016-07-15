@@ -1,8 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PatternMatcher;
+using System;
 
-namespace PatternMatchExpressions.Test
+namespace PatternMatcher.Test
 {
+    public class ABC
+    {
+        public int A { get; set; }
+        public double B { get; set; }
+        public string C { get; set; }
+    }
+
     [TestClass]
     public class PatternTest
     {
@@ -91,6 +98,51 @@ namespace PatternMatchExpressions.Test
                 .Do(() => value += 5);
 
             Assert.AreEqual(11, value);
+        }
+
+        [TestMethod]
+        public void Object_ShouldPass()
+        {
+            ABC value = new ABC()
+            {
+                A = 1,
+                B = 2.0,
+                C = "ABC"
+            };
+
+            value
+                .Case(v => v.A == 1 && v.C.Length == 3)
+                .Do(v => v.A++)
+                .Case(v => v.A > 0)
+                .Case(v => v.B > 0)
+                .Do(v => v.B += 3.0);
+
+            Assert.AreEqual(5.0, value.B);
+            Assert.AreEqual(2, value.A);
+        }
+
+        [TestMethod]
+        public void MultiPattern()
+        {
+            var multiVar = Tuple.Create(1, 2.0f, "ABC");
+
+            bool r1 = false;
+            bool r2 = false;
+
+            multiVar
+                .Case(v => v.Item1 == 1 && v.Item2 == 3 && v.Item3.Length > 0)
+                .Do(v =>
+                {
+                    r1 = true;
+                })
+                .Case<Tuple<int, float, string>>(v => v.Item1 == 1 && v.Item2 == 2.0f)
+                .Do(v =>
+                {
+                    r2 = true;
+                });
+
+            Assert.IsFalse(r1);
+            Assert.IsTrue(r2);
         }
     }
 }
