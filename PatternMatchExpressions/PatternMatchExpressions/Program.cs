@@ -70,17 +70,7 @@ namespace PatternMatchExpressions
             };
 
             test
-                .Case((t) =>
-                {
-                    Console.WriteLine("Case1");
-                    var result = false;
-                    if (t.A > 0 && t.B < 6)
-                    {
-                        result = true;
-                    }
-                    Console.WriteLine($"Case1 : {result}");
-                    return result;
-                })
+                .Case((t) => t.A > 0 && t.B < 6)
                 .Statement((s) =>
                 {
                     Console.WriteLine("Statement1");
