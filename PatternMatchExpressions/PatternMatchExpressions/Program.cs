@@ -19,17 +19,27 @@ namespace PatternMatchExpressions
         Fault
     }
 
+    public enum CaseStatus
+    {
+        Pattern,
+        Statement,
+        Break
+    }
+
     public class Case<T>
     {
-        public Case(T testObject, CaseResult result)
+        public Case(T testObject, CaseResult result, CaseStatus status)
         {
             TestObject = testObject;
             Result = result;
+            Status = status;
         }
 
         public T TestObject { get; set; }
 
         public CaseResult Result { get; set; }
+
+        public CaseStatus Status { get; set; }
     }
 
     public static class Switch
@@ -37,13 +47,18 @@ namespace PatternMatchExpressions
         public static Case<T> Case<T>(this T testObject, Predicate<T> casePredicate)
         {
             CaseResult result = casePredicate(testObject) ? CaseResult.Match : CaseResult.Fault;
-            return new Case<T>(testObject, result);
+            return new Case<T>(testObject, result, CaseStatus.Pattern);
         }
 
         public static Case<T> Case<T>(this Case<T> patternCase, Predicate<T> casePredicate)
         {
-            CaseResult result = casePredicate(patternCase.TestObject) ? CaseResult.Match : CaseResult.Fault;
-            patternCase.Result = result;
+            if(patternCase.Status == CaseStatus.Statement ||
+                (patternCase.Status == CaseStatus.Pattern && !(patternCase.Result == CaseResult.Match)))
+            {
+                patternCase.Result = casePredicate(patternCase.TestObject) ? CaseResult.Match : CaseResult.Fault;
+            }
+
+            patternCase.Status = CaseStatus.Pattern;
             return patternCase;
         }
 
@@ -54,6 +69,7 @@ namespace PatternMatchExpressions
                 statement(patternCase.TestObject);
             }
 
+            patternCase.Status = CaseStatus.Statement;
             return patternCase;
         }
     }
@@ -98,3 +114,20 @@ namespace PatternMatchExpressions
         }
     }
 }
+
+/*
+ * 
+ * T
+ * T
+ * F
+ * 
+ * F
+ * F
+ * T
+ * 
+ * T
+ * F
+ * T
+ * 
+ * 
+ */
