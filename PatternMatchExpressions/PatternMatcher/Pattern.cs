@@ -4,11 +4,16 @@ namespace PatternMatcher
 {
     public static class Pattern
     {
-        public static Case<T> Case<T>(this T testObject, Predicate<T> casePredicate)
+        public static Case<T> Switch<T>(this T testObject)
         {
-            CaseResult result = casePredicate(testObject) ? CaseResult.Match : CaseResult.Fault;
-            return new Case<T>(testObject, result, CaseStatus.Pattern);
+            return new Case<T>(testObject, CaseResult.Fault, CaseStatus.Statement);
         }
+
+        //public static Case<T> Case<T>(this T testObject, Predicate<T> casePredicate)
+        //{
+        //    CaseResult result = casePredicate(testObject) ? CaseResult.Match : CaseResult.Fault;
+        //    return new Case<T>(testObject, result, CaseStatus.Pattern);
+        //}
 
         public static Case<T> Case<T>(this Case<T> patternCase, Predicate<T> casePredicate)
         {

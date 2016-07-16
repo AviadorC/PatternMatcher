@@ -20,7 +20,7 @@ namespace PatternMatcher.Test
 
             bool success = false;
 
-            value
+            Pattern.Switch(value)
                 .Case((v) => v > 0 && v < 5)
                 .Do((v) => success = true);
 
@@ -36,7 +36,7 @@ namespace PatternMatcher.Test
             bool r2 = true;
             bool r3 = false;
 
-            value
+            Pattern.Switch(value)
                 .Case((v) => v > 0 && v < 10)
                 .Do((v) => r1 = true)
                 .Case((v) => v < 2 || v > 10)
@@ -56,7 +56,7 @@ namespace PatternMatcher.Test
 
             bool result = false;
 
-            value
+            Pattern.Switch(value)
                 .Case((v) => v > 6)
                 .Case((v) => v > 3 && v < 7)
                 .Do((v) => result = true);
@@ -69,7 +69,7 @@ namespace PatternMatcher.Test
         {
             int value = 5;
 
-            value
+            Pattern.Switch(value)
                 .Case((v) => v > 3)
                 .Do(() => value++)
                 .Case((v) => v < 7)
@@ -87,7 +87,7 @@ namespace PatternMatcher.Test
         {
             int value = 5;
 
-            value
+            Pattern.Switch(value)
                 .Case((v) => v > 3)
                 .Do(() => value++)
                 .Case((v) => v < 1)
@@ -110,7 +110,7 @@ namespace PatternMatcher.Test
                 C = "ABC"
             };
 
-            value
+            Pattern.Switch(value)
                 .Case(v => v.A == 1 && v.C.Length == 3)
                 .Do(v => v.A++)
                 .Case(v => v.A > 0)
@@ -129,13 +129,13 @@ namespace PatternMatcher.Test
             bool r1 = false;
             bool r2 = false;
 
-            multiVar
+            Pattern.Switch(multiVar)
                 .Case(v => v.Item1 == 1 && v.Item2 == 3 && v.Item3.Length > 0)
                 .Do(v =>
                 {
                     r1 = true;
                 })
-                .Case<Tuple<int, float, string>>(v => v.Item1 == 1 && v.Item2 == 2.0f)
+                .Case(v => v.Item1 == 1 && v.Item2 == 2.0f)
                 .Do(v =>
                 {
                     r2 = true;
