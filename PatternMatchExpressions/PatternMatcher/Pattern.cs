@@ -9,13 +9,7 @@ namespace PatternMatcher
             return new Case<T>(testObject, CaseResult.Fault, CaseStatus.Statement);
         }
 
-        //public static Case<T> Case<T>(this T testObject, Predicate<T> casePredicate)
-        //{
-        //    CaseResult result = casePredicate(testObject) ? CaseResult.Match : CaseResult.Fault;
-        //    return new Case<T>(testObject, result, CaseStatus.Pattern);
-        //}
-
-        public static Case<T> Case<T>(this Case<T> patternCase, Predicate<T> casePredicate)
+        public static Case<T> PatternCase<T>(this Case<T> patternCase, Predicate<T> casePredicate)
         {
             var explicitCase = patternCase as ICase<T>;
             if (explicitCase.Status == CaseStatus.Break)
@@ -75,6 +69,32 @@ namespace PatternMatcher
                 explicitCase.Status = CaseStatus.Break;
             }
             return patternCase;
+        }
+
+        public class Case<T> : ICase<T>
+        {
+            public Case(T testObject, CaseResult result, CaseStatus status)
+            {
+                var self = this as ICase<T>;
+                self.TestObject = testObject;
+                self.Result = result;
+                self.Status = status;
+            }
+
+            CaseResult ICase<T>.Result { get; set; }
+
+            CaseStatus ICase<T>.Status { get; set; }
+
+            T ICase<T>.TestObject { get; set; }
+        }
+
+        private interface ICase<T>
+        {
+            T TestObject { get; set; }
+
+            CaseResult Result { get; set; }
+
+            CaseStatus Status { get; set; }
         }
     }
 }

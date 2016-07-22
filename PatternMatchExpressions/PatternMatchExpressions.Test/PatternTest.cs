@@ -21,7 +21,7 @@ namespace PatternMatcher.Test
             bool success = false;
 
             Pattern.Switch(value)
-                .Case((v) => v > 0 && v < 5)
+                .PatternCase((v) => v > 0 && v < 5)
                 .Do((v) => success = true);
 
             Assert.IsTrue(success);
@@ -37,11 +37,11 @@ namespace PatternMatcher.Test
             bool r3 = false;
 
             Pattern.Switch(value)
-                .Case((v) => v > 0 && v < 10)
+                .PatternCase((v) => v > 0 && v < 10)
                 .Do((v) => r1 = true)
-                .Case((v) => v < 2 || v > 10)
+                .PatternCase((v) => v < 2 || v > 10)
                 .Do((v) => r2 = false)
-                .Case((v) => v > 0)
+                .PatternCase((v) => v > 0)
                 .Do((v) => r3 = true);
 
             Assert.IsTrue(r1);
@@ -57,8 +57,8 @@ namespace PatternMatcher.Test
             bool result = false;
 
             Pattern.Switch(value)
-                .Case((v) => v > 6)
-                .Case((v) => v > 3 && v < 7)
+                .PatternCase((v) => v > 6)
+                .PatternCase((v) => v > 3 && v < 7)
                 .Do((v) => result = true);
 
             Assert.IsTrue(result);
@@ -70,13 +70,13 @@ namespace PatternMatcher.Test
             int value = 5;
 
             Pattern.Switch(value)
-                .Case((v) => v > 3)
+                .PatternCase((v) => v > 3)
                 .Do(() => value++)
-                .Case((v) => v < 7)
-                .Case((v) => v < 10)
+                .PatternCase((v) => v < 7)
+                .PatternCase((v) => v < 10)
                 .Do(() => value++)
                 .Break()
-                .Case((v) => v > 1)
+                .PatternCase((v) => v > 1)
                 .Do(() => value++);
 
             Assert.AreEqual(7, value);
@@ -88,13 +88,13 @@ namespace PatternMatcher.Test
             int value = 5;
 
             Pattern.Switch(value)
-                .Case((v) => v > 3)
+                .PatternCase((v) => v > 3)
                 .Do(() => value++)
-                .Case((v) => v < 1)
-                .Case((v) => v > 10)
+                .PatternCase((v) => v < 1)
+                .PatternCase((v) => v > 10)
                 .Do(() => value++)
                 .Break()
-                .Case((v) => v > 1)
+                .PatternCase((v) => v > 1)
                 .Do(() => value += 5);
 
             Assert.AreEqual(11, value);
@@ -111,10 +111,10 @@ namespace PatternMatcher.Test
             };
 
             Pattern.Switch(value)
-                .Case(v => v.A == 1 && v.C.Length == 3)
+                .PatternCase(v => v.A == 1 && v.C.Length == 3)
                 .Do(v => v.A++)
-                .Case(v => v.A > 0)
-                .Case(v => v.B > 0)
+                .PatternCase(v => v.A > 0)
+                .PatternCase(v => v.B > 0)
                 .Do(v => v.B += 3.0);
 
             Assert.AreEqual(5.0, value.B);
@@ -130,12 +130,12 @@ namespace PatternMatcher.Test
             bool r2 = false;
 
             Pattern.Switch(multiVar)
-                .Case(v => v.Item1 == 1 && v.Item2 == 3 && v.Item3.Length > 0)
+                .PatternCase(v => v.Item1 == 1 && v.Item2 == 3 && v.Item3.Length > 0)
                 .Do(v =>
                 {
                     r1 = true;
                 })
-                .Case<Tuple<int, float, string>>(v => v.Item1 == 1 && v.Item2 == 2.0f)
+                .PatternCase<Tuple<int, float, string>>(v => v.Item1 == 1 && v.Item2 == 2.0f)
                 .Do(v =>
                 {
                     r2 = true;
