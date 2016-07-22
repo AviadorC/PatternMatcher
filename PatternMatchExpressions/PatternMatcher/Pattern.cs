@@ -17,58 +17,62 @@ namespace PatternMatcher
 
         public static Case<T> Case<T>(this Case<T> patternCase, Predicate<T> casePredicate)
         {
-            if (patternCase.Status == CaseStatus.Break)
+            var explicitCase = patternCase as ICase<T>;
+            if (explicitCase.Status == CaseStatus.Break)
             {
                 return patternCase;
             }
 
-            if (patternCase.Status == CaseStatus.Statement ||
-                (patternCase.Status == CaseStatus.Pattern && !(patternCase.Result == CaseResult.Match)))
+            if (explicitCase.Status == CaseStatus.Statement ||
+                (explicitCase.Status == CaseStatus.Pattern && !(explicitCase.Result == CaseResult.Match)))
             {
-                patternCase.Result = casePredicate(patternCase.TestObject) ? CaseResult.Match : CaseResult.Fault;
+                explicitCase.Result = casePredicate(explicitCase.TestObject) ? CaseResult.Match : CaseResult.Fault;
             }
 
-            patternCase.Status = CaseStatus.Pattern;
+            explicitCase.Status = CaseStatus.Pattern;
             return patternCase;
         }
 
         public static Case<T> Do<T>(this Case<T> patternCase, Action<T> statement)
         {
-            if (patternCase.Status == CaseStatus.Break)
+            var explicitCase = patternCase as ICase<T>;
+            if (explicitCase.Status == CaseStatus.Break)
             {
                 return patternCase;
             }
 
-            if (patternCase.Result == CaseResult.Match)
+            if (explicitCase.Result == CaseResult.Match)
             {
-                statement(patternCase.TestObject);
+                statement(explicitCase.TestObject);
             }
 
-            patternCase.Status = CaseStatus.Statement;
+            explicitCase.Status = CaseStatus.Statement;
             return patternCase;
         }
 
         public static Case<T> Do<T>(this Case<T> patternCase, Action statement)
         {
-            if (patternCase.Status == CaseStatus.Break)
+            var explicitCase = patternCase as ICase<T>;
+            if (explicitCase.Status == CaseStatus.Break)
             {
                 return patternCase;
             }
 
-            if (patternCase.Result == CaseResult.Match)
+            if (explicitCase.Result == CaseResult.Match)
             {
                 statement();
             }
 
-            patternCase.Status = CaseStatus.Statement;
+            explicitCase.Status = CaseStatus.Statement;
             return patternCase;
         }
 
         public static Case<T> Break<T>(this Case<T> patternCase)
         {
-            if (patternCase.Result == CaseResult.Match && patternCase.Status == CaseStatus.Statement)
+            var explicitCase = patternCase as ICase<T>;
+            if (explicitCase.Result == CaseResult.Match && explicitCase.Status == CaseStatus.Statement)
             {
-                patternCase.Status = CaseStatus.Break;
+                explicitCase.Status = CaseStatus.Break;
             }
             return patternCase;
         }

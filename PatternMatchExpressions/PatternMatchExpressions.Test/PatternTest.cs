@@ -135,7 +135,7 @@ namespace PatternMatcher.Test
                 {
                     r1 = true;
                 })
-                .Case(v => v.Item1 == 1 && v.Item2 == 2.0f)
+                .Case<Tuple<int, float, string>>(v => v.Item1 == 1 && v.Item2 == 2.0f)
                 .Do(v =>
                 {
                     r2 = true;

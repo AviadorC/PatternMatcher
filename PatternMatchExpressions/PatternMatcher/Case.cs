@@ -1,18 +1,19 @@
 ﻿namespace PatternMatcher
 {
-    public class Case<T>
+    public class Case<T> : ICase<T>
     {
         public Case(T testObject, CaseResult result, CaseStatus status)
         {
-            TestObject = testObject;
-            Result = result;
-            Status = status;
+            var self = this as ICase<T>;
+            self.TestObject  = testObject;
+            self.Result = result;
+            self.Status = status;
         }
 
-        public T TestObject { get; set; }
+        CaseResult ICase<T>.Result { get; set; }
 
-        public CaseResult Result { get; set; }
+        CaseStatus ICase<T>.Status { get; set; }
 
-        public CaseStatus Status { get; set; }
+        T ICase<T>.TestObject { get; set; }
     }
 }
