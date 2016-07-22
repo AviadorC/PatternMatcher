@@ -19,8 +19,7 @@ namespace PatternMatcher
         {
             ICase<T> caseObject = new CaseObject<T>();
             caseObject.TestObject = testObject;
-            caseObject.Result = CaseResult.Fault;
-            caseObject.Status = CaseStatus.Statement;
+            caseObject.Flags |= CaseFlags.Statement;
             caseObject.CaseRunned = false;
 
             return caseObject as CaseObject<T>;
@@ -36,18 +35,19 @@ namespace PatternMatcher
         public static CaseObject<T> Case<T>(this CaseObject<T> patternCase, Predicate<T> casePredicate)
         {
             var explicitCase = patternCase as ICase<T>;
-            if (explicitCase.Status == CaseStatus.Break)
+            if (explicitCase.Flags.HasFlag(CaseFlags.Break))
             {
                 return patternCase;
             }
 
-            if (explicitCase.Status == CaseStatus.Statement ||
-                (explicitCase.Status == CaseStatus.Pattern && !(explicitCase.Result == CaseResult.Match)))
+            if (explicitCase.Flags.HasFlag(CaseFlags.Statement))
             {
-                explicitCase.Result = casePredicate(explicitCase.TestObject) ? CaseResult.Match : CaseResult.Fault;
+                explicitCase.Flags &= ~CaseFlags.Match;
             }
 
-            explicitCase.Status = CaseStatus.Pattern;
+            explicitCase.Flags |= casePredicate(explicitCase.TestObject) ? CaseFlags.Match : 0;
+
+            explicitCase.Flags &= ~CaseFlags.Statement;
             return patternCase;
         }
 
@@ -61,18 +61,18 @@ namespace PatternMatcher
         public static CaseObject<T> Do<T>(this CaseObject<T> patternCase, Action<T> statement)
         {
             var explicitCase = patternCase as ICase<T>;
-            if (explicitCase.Status == CaseStatus.Break)
+            if (explicitCase.Flags.HasFlag(CaseFlags.Break))
             {
                 return patternCase;
             }
 
-            if (explicitCase.Result == CaseResult.Match)
+            if (explicitCase.Flags.HasFlag(CaseFlags.Match))
             {
                 explicitCase.CaseRunned = true;
                 statement(explicitCase.TestObject);
             }
 
-            explicitCase.Status = CaseStatus.Statement;
+            explicitCase.Flags |= CaseFlags.Statement;
             return patternCase;
         }
 
@@ -86,18 +86,18 @@ namespace PatternMatcher
         public static CaseObject<T> Do<T>(this CaseObject<T> patternCase, Action statement)
         {
             var explicitCase = patternCase as ICase<T>;
-            if (explicitCase.Status == CaseStatus.Break)
+            if (explicitCase.Flags.HasFlag(CaseFlags.Break))
             {
                 return patternCase;
             }
 
-            if (explicitCase.Result == CaseResult.Match)
+            if (explicitCase.Flags.HasFlag(CaseFlags.Match))
             {
                 explicitCase.CaseRunned = true;
                 statement();
             }
 
-            explicitCase.Status = CaseStatus.Statement;
+            explicitCase.Flags |= CaseFlags.Statement;
             return patternCase;
         }
 
@@ -111,9 +111,9 @@ namespace PatternMatcher
         public static CaseObject<T> BreakOnMatch<T>(this CaseObject<T> patternCase)
         {
             var explicitCase = patternCase as ICase<T>;
-            if (explicitCase.Result == CaseResult.Match && explicitCase.Status == CaseStatus.Statement)
+            if (explicitCase.Flags.HasFlag(CaseFlags.Match) && explicitCase.Flags.HasFlag(CaseFlags.Statement))
             {
-                explicitCase.Status = CaseStatus.Break;
+                explicitCase.Flags |= CaseFlags.Break;
             }
             return patternCase;
         }
@@ -154,7 +154,7 @@ namespace PatternMatcher
         /// Case object used for case chain build up. Hides inner mechanisms using explicit interface
         /// implementation of private interface ICase.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">Case type</typeparam>
         public class CaseObject<T> : ICase<T>
         {
             /// <summary>
@@ -163,65 +163,58 @@ namespace PatternMatcher
             bool ICase<T>.CaseRunned { get; set; }
 
             /// <summary>
-            /// Gets or sets the case result.
-            /// </summary>
-            CaseResult ICase<T>.Result { get; set; }
-
-            /// <summary>
-            /// Gets or sets the case status.
-            /// </summary>
-            CaseStatus ICase<T>.Status { get; set; }
-
-            /// <summary>
             /// Gets or sets the test object.
             /// </summary>
             T ICase<T>.TestObject { get; set; }
+
+            /// <summary>
+            /// Gets or sets case flags.
+            /// </summary>
+            CaseFlags ICase<T>.Flags { get; set; }
         }
 
         /// <summary>
         /// Private interface used as a key for exposing inner mechanism properties.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">Case type</typeparam>
         private interface ICase<T>
         {
+            /// <summary>
+            /// Gets or sets a value indicating whether case statement fired.
+            /// </summary>
             bool CaseRunned { get; set; }
 
+            /// <summary>
+            /// Gets or sets the test object.
+            /// </summary>
             T TestObject { get; set; }
 
-            CaseResult Result { get; set; }
-
-            CaseStatus Status { get; set; }
+            /// <summary>
+            /// Gets or sets case flags.
+            /// </summary>
+            CaseFlags Flags { get; set; }
         }
 
-        private enum CaseResult
+        /// <summary>
+        /// Case mechanism flags
+        /// </summary>
+        [Flags]
+        private enum CaseFlags
         {
             /// <summary>
-            /// Case predicate returned true meaning case matches.
+            /// Indicates if case had matching pattern
             /// </summary>
-            Match,
+            Match = 1,
 
             /// <summary>
-            /// Case predicate returned false meaning case faulted.
+            /// Indicates if last case was statement
             /// </summary>
-            Fault
-        }
-
-        private enum CaseStatus
-        {
-            /// <summary>
-            /// Last chain element was case pattern.
-            /// </summary>
-            Pattern,
+            Statement = 2,
 
             /// <summary>
-            /// Last chain element was statement.
+            /// Indicates that switch case should break statements execution
             /// </summary>
-            Statement,
-
-            /// <summary>
-            /// Last chain element was break.
-            /// </summary>
-            Break
+            Break = 4
         }
     }
 }

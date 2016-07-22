@@ -28,6 +28,18 @@ namespace PatternMatcher.Test
         }
 
         [TestMethod]
+        public void Int_ShouldPass_CS_NoChange()
+        {
+            int value = 5;
+
+            Pattern.Switch(value)
+                .Case(v => v < 3)
+                .Do(() => value++);
+
+            Assert.AreEqual(5, value);
+        }
+
+        [TestMethod]
         public void Int_ShouldPass_CSCSCS()
         {
             int value = 5;
@@ -101,7 +113,7 @@ namespace PatternMatcher.Test
         }
 
         [TestMethod]
-        public void Object_ShouldPass()
+        public void Object_ShouldPass_CCS()
         {
             ABC value = new ABC()
             {
