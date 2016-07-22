@@ -144,5 +144,31 @@ namespace PatternMatcher.Test
             Assert.IsFalse(r1);
             Assert.IsTrue(r2);
         }
+
+        [TestMethod]
+        public void DefaultCase_ShouldRunDefault()
+        {
+            int value = 5;
+
+            Pattern.Switch(value)
+                .Case(v => v < 3)
+                .Do(() => value++)
+                .Default(() => value += 5);
+
+            Assert.AreEqual(10, value);
+        }
+
+        [TestMethod]
+        public void DefaultCase_ShouldNotRunDefault()
+        {
+            int value = 5;
+
+            Pattern.Switch(value)
+                .Case(v => v == 5)
+                .Do(() => value++)
+                .Default(() => value += 5);
+
+            Assert.AreEqual(6, value);
+        }
     }
 }
