@@ -4,12 +4,12 @@ namespace PatternMatcher
 {
     public static class Pattern
     {
-        public static Case<T> Switch<T>(this T testObject)
+        public static CaseObject<T> Switch<T>(this T testObject)
         {
-            return new Case<T>(testObject, CaseResult.Fault, CaseStatus.Statement);
+            return new CaseObject<T>(testObject, CaseResult.Fault, CaseStatus.Statement);
         }
 
-        public static Case<T> PatternCase<T>(this Case<T> patternCase, Predicate<T> casePredicate)
+        public static CaseObject<T> Case<T>(this CaseObject<T> patternCase, Predicate<T> casePredicate)
         {
             var explicitCase = patternCase as ICase<T>;
             if (explicitCase.Status == CaseStatus.Break)
@@ -27,7 +27,7 @@ namespace PatternMatcher
             return patternCase;
         }
 
-        public static Case<T> Do<T>(this Case<T> patternCase, Action<T> statement)
+        public static CaseObject<T> Do<T>(this CaseObject<T> patternCase, Action<T> statement)
         {
             var explicitCase = patternCase as ICase<T>;
             if (explicitCase.Status == CaseStatus.Break)
@@ -44,7 +44,7 @@ namespace PatternMatcher
             return patternCase;
         }
 
-        public static Case<T> Do<T>(this Case<T> patternCase, Action statement)
+        public static CaseObject<T> Do<T>(this CaseObject<T> patternCase, Action statement)
         {
             var explicitCase = patternCase as ICase<T>;
             if (explicitCase.Status == CaseStatus.Break)
@@ -61,7 +61,7 @@ namespace PatternMatcher
             return patternCase;
         }
 
-        public static Case<T> Break<T>(this Case<T> patternCase)
+        public static CaseObject<T> Break<T>(this CaseObject<T> patternCase)
         {
             var explicitCase = patternCase as ICase<T>;
             if (explicitCase.Result == CaseResult.Match && explicitCase.Status == CaseStatus.Statement)
@@ -71,9 +71,9 @@ namespace PatternMatcher
             return patternCase;
         }
 
-        public class Case<T> : ICase<T>
+        public class CaseObject<T> : ICase<T>
         {
-            public Case(T testObject, CaseResult result, CaseStatus status)
+            public CaseObject(T testObject, CaseResult result, CaseStatus status)
             {
                 var self = this as ICase<T>;
                 self.TestObject = testObject;
