@@ -69,7 +69,7 @@ namespace PatternMatcher
             return patternCase;
         }
 
-        public static CaseObject<T> Break<T>(this CaseObject<T> patternCase)
+        public static CaseObject<T> BreakOnMatch<T>(this CaseObject<T> patternCase)
         {
             var explicitCase = patternCase as ICase<T>;
             if (explicitCase.Result == CaseResult.Match && explicitCase.Status == CaseStatus.Statement)

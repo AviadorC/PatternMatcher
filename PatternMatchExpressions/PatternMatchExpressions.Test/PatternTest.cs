@@ -75,7 +75,7 @@ namespace PatternMatcher.Test
                 .Case((v) => v < 7)
                 .Case((v) => v < 10)
                 .Do(() => value++)
-                .Break()
+                .BreakOnMatch()
                 .Case((v) => v > 1)
                 .Do(() => value++);
 
@@ -93,7 +93,7 @@ namespace PatternMatcher.Test
                 .Case((v) => v < 1)
                 .Case((v) => v > 10)
                 .Do(() => value++)
-                .Break()
+                .BreakOnMatch()
                 .Case((v) => v > 1)
                 .Do(() => value += 5);
 
