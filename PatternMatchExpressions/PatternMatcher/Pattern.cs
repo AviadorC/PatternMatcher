@@ -6,7 +6,12 @@ namespace PatternMatcher
     {
         public static CaseObject<T> Switch<T>(this T testObject)
         {
-            return new CaseObject<T>(testObject, CaseResult.Fault, CaseStatus.Statement);
+            ICase<T> caseObject = new CaseObject<T>();
+            caseObject.TestObject = testObject;
+            caseObject.Result = CaseResult.Fault;
+            caseObject.Status = CaseStatus.Statement;
+
+            return caseObject as CaseObject<T>;
         }
 
         public static CaseObject<T> Case<T>(this CaseObject<T> patternCase, Predicate<T> casePredicate)
@@ -73,14 +78,6 @@ namespace PatternMatcher
 
         public class CaseObject<T> : ICase<T>
         {
-            public CaseObject(T testObject, CaseResult result, CaseStatus status)
-            {
-                var self = this as ICase<T>;
-                self.TestObject = testObject;
-                self.Result = result;
-                self.Status = status;
-            }
-
             CaseResult ICase<T>.Result { get; set; }
 
             CaseStatus ICase<T>.Status { get; set; }
@@ -95,6 +92,19 @@ namespace PatternMatcher
             CaseResult Result { get; set; }
 
             CaseStatus Status { get; set; }
+        }
+
+        private enum CaseResult
+        {
+            Match,
+            Fault
+        }
+
+        private enum CaseStatus
+        {
+            Pattern,
+            Statement,
+            Break
         }
     }
 }
